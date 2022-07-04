@@ -1,0 +1,25 @@
+.form{
+    margin-top: 3rem;
+    width: 47.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.input{
+    display: none;
+}
+
+.label{
+    display: flex;
+    flex-direction: column;
+    width: 10rem;
+    gap: 0.5rem;
+}
+
+.editor{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+

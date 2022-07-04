@@ -2,33 +2,113 @@ import { ReactElement } from "react";
 import { userStore } from "../../store/userStore";
 import shallow from "zustand/shallow";
 import { Screen404 } from "../../components/Screen404/Screen404";
-import { Box, Button, Typography, Container } from "@mui/material";
-import { Link } from "react-router-dom";
+import {
+  Box,
+  Button,
+  Typography,
+  Container,
+  TextField,
+  Fab,
+  FormLabel,
+} from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
+import "./ArticleDetail.css";
+import MDEditor from "@uiw/react-md-editor";
+
+type FormValues = {
+  title: string;
+  image: any;
+  content: string;
+};
 
 export const ArticleDetail = (): ReactElement => {
-  const { token } = userStore.useStore(
-    (store) => ({ token: store.token }),
+  const { token, isUser } = userStore.useStore(
+    (store) => ({ token: store.token, isUser: store.isUser }),
     shallow
   );
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormValues>({
+    mode: "onChange",
+  });
+
+  const onUploadImage = () => {
+    console.log("ahoj");
+  };
+
+  const onSubmit = (data: FormValues) => {
+    console.log(data);
+  };
+
   const content = (
     <Container maxWidth="xl">
-      <Box
-        sx={{
-          flexGrow: 1,
-          display: "flex",
-          gap: "2rem",
-          marginTop: "3rem",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h1" sx={{ fontSize: "2.5rem", fontWeight: 500 }}>
-          Create new article
-        </Typography>
-        <Link to="/recent-articles" className="link">
-          <Button variant="contained">Publish Article</Button>
-        </Link>
-      </Box>
+      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            gap: "2rem",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h1" sx={{ fontSize: "2.5rem", fontWeight: 500 }}>
+            Create new article
+          </Typography>
+          <Button variant="contained" type="submit">
+            Publish Article
+          </Button>
+        </Box>
+
+        <TextField
+          sx={{ marginBottom: "1.5rem" }}
+          label="Article Title"
+          fullWidth
+          {...register("title", {
+            required: "Title is required",
+          })}
+          error={Boolean(errors.title)}
+          helperText={errors.title?.message}
+        />
+
+        <input
+          {...register("image")}
+          accept="*.jpeg, *.png, *.jpg"
+          id="contained-button-file"
+          type="file"
+          className="input"
+        />
+        <FormLabel htmlFor="contained-button-file" className="label">
+          Featured Image
+          <Fab
+            component="span"
+            variant="extended"
+            sx={{
+              backgroundColor: "#6C757D",
+              color: "#ffff",
+              borderRadius: "0.2rem",
+              height: "2.3rem",
+            }}
+          >
+            Upload an Image
+          </Fab>
+        </FormLabel>
+
+        <Controller
+          render={({ field }) => (
+            <div className="editor">
+              <FormLabel htmlFor="editor">Content</FormLabel>
+              <MDEditor {...field} id="editor"/>
+            </div>
+          )}
+          name="content"
+          control={control}
+        />
+      </form>
     </Container>
   );
-  return token ? content : <Screen404 />;
+  return isUser ? content : <Screen404 />;
 };

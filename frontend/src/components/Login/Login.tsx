@@ -99,6 +99,7 @@ export const Login = (): ReactElement => {
           <TextField
             sx={{ marginBottom: "1.5rem" }}
             label="Password"
+            type="password"
             fullWidth
             {...register("password", {
               required: "Password is required",

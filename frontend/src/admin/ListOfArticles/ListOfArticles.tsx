@@ -7,8 +7,8 @@ import { Box, Button, Typography, Container } from "@mui/material";
 import "./ListOfArticles.css"
 
 export const ListOfArticles = (): ReactElement => {
-  const { token } = userStore.useStore(
-    (store) => ({ token: store.token }),
+  const { token, isUser } = userStore.useStore(
+    (store) => ({ token: store.token, isUser: store.isUser }),
     shallow
   );
 
@@ -27,5 +27,5 @@ export const ListOfArticles = (): ReactElement => {
     </Container>
   );
 
-  return token ? content : <Screen404 />;
+  return isUser ? content : <Screen404 />;
 };
