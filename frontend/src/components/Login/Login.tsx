@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   TextField,
@@ -9,6 +9,10 @@ import {
   Box,
 } from "@mui/material";
 import "./Login.css";
+import { Navigate } from "react-router-dom";
+import { keepToken, logIn } from "../../actions/userActions";
+import { userStore } from "../../store/userStore";
+import shallow from "zustand/shallow";
 
 type FormValues = {
   username: string;
@@ -16,6 +20,15 @@ type FormValues = {
 };
 
 export const Login = (): ReactElement => {
+  const { isUser } = userStore.useStore(
+    (store) => ({ isUser: store.isUser }),
+    shallow
+  );
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [processing, setProcessing] = useState<boolean>(false);
+  const requestHeaders: HeadersInit = new Headers();
+  requestHeaders.set("Content-Type", "application/json");
+  requestHeaders.set("X-API-KEY", process.env.REACT_APP_API_KEY!);
   const {
     register,
     handleSubmit,
@@ -24,11 +37,43 @@ export const Login = (): ReactElement => {
     mode: "onChange",
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  const onSubmit = async (data: FormValues): Promise<void> => {
+    setErrorMessage("");
+    try {
+      setProcessing(true);
+      const credentials = {
+        username: data.username,
+        password: data.password,
+      };
+      const response = await fetch(
+        "https://fullstack.exercise.applifting.cz/login",
+        {
+          method: "POST",
+          body: JSON.stringify(credentials),
+          headers: requestHeaders,
+        }
+      );
+      const responseData = await response.json();
+      if (!response.ok) {
+        setErrorMessage(responseData.message);
+      } else {
+        keepToken(responseData.access_token);
+        logIn();
+      }
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Something went wrong!");
+    }
+    setProcessing(false);
   };
-  return (
-    <Card sx={{ maxWidth: 368, boxShadow: "0px 16px 48px rgba(0, 0, 0, 0.175)" }} className="card">
+
+  return isUser ? (
+    <Navigate to="/admin-my-articles" replace />
+  ) : (
+    <Card
+      sx={{ maxWidth: 368, boxShadow: "0px 16px 48px rgba(0, 0, 0, 0.175)" }}
+      className="card"
+    >
       <CardContent sx={{ padding: "2rem" }}>
         <Typography
           variant="h3"
@@ -61,8 +106,13 @@ export const Login = (): ReactElement => {
             error={Boolean(errors.password)}
             helperText={errors.password?.message}
           />
+          {errorMessage && (
+            <Typography variant="h6" sx={{ color: "red" }}>
+              {errorMessage}
+            </Typography>
+          )}
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button variant="contained" type="submit">
+            <Button variant="contained" type="submit" disabled={processing}>
               Log In
             </Button>
           </Box>

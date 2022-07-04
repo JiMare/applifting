@@ -4,6 +4,8 @@ import { Navbar } from "./components/Navbar/Navbar";
 import { Articles } from "./components/Articles/Articles";
 import { Login } from "./components/Login/Login";
 import { Screen404 } from "./components/Screen404/Screen404";
+import { ListOfArticles } from "./admin/ListOfArticles/ListOfArticles";
+import { ArticleDetail } from "./admin/ArticleDetail/ArticleDetail";
 
 const App = (): ReactElement => {
   return (
@@ -13,6 +15,8 @@ const App = (): ReactElement => {
         <Routes>
           <Route path="/recent-articles" element={<Articles />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/admin-my-articles" element={<ListOfArticles />} />
+          <Route path="/admin-article-detail" element={<ArticleDetail />} />
           <Route path="/" element={<Screen404 />} />
         </Routes>
       </BrowserRouter>
