@@ -13,6 +13,7 @@ import { Navigate } from "react-router-dom";
 import { keepToken, logIn } from "../../actions/userActions";
 import { userStore } from "../../store/userStore";
 import shallow from "zustand/shallow";
+import { getRequestHeaders } from "../../utils/getRequestHeaders";
 
 type FormValues = {
   username: string;
@@ -26,9 +27,6 @@ export const Login = (): ReactElement => {
   );
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [processing, setProcessing] = useState<boolean>(false);
-  const requestHeaders: HeadersInit = new Headers();
-  requestHeaders.set("Content-Type", "application/json");
-  requestHeaders.set("X-API-KEY", process.env.REACT_APP_API_KEY!);
   const {
     register,
     handleSubmit,
@@ -50,7 +48,7 @@ export const Login = (): ReactElement => {
         {
           method: "POST",
           body: JSON.stringify(credentials),
-          headers: requestHeaders,
+          headers: getRequestHeaders(),
         }
       );
       const responseData = await response.json();
