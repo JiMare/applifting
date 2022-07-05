@@ -14,6 +14,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import "./ArticleDetail.css";
 import MDEditor from "@uiw/react-md-editor";
+import { getRequestHeaders } from "../../utils/getRequestHeaders";
 
 type FormValues = {
   title: string;
@@ -40,8 +41,26 @@ export const ArticleDetail = (): ReactElement => {
     console.log("ahoj");
   };
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  const onSubmit = async (data: FormValues) => {
+    const requestHeaders = getRequestHeaders();
+    requestHeaders.set("Authorization", token);
+
+    const newArticle = {
+      articleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      title: data.title,
+      perex: data.content.slice(0, 100) + "...",
+      imageId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      content: data.content,
+    };
+    try {
+      await fetch("https://fullstack.exercise.applifting.cz/articles", {
+        method: "POST",
+        body: JSON.stringify(newArticle),
+        headers: requestHeaders,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const content = (
@@ -101,7 +120,7 @@ export const ArticleDetail = (): ReactElement => {
           render={({ field }) => (
             <div className="editor">
               <FormLabel htmlFor="editor">Content</FormLabel>
-              <MDEditor {...field} id="editor"/>
+              <MDEditor {...field} id="editor" />
             </div>
           )}
           name="content"

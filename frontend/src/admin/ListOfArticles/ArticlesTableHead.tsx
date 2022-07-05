@@ -10,7 +10,9 @@ export const ArticlesTableHead = (props: Props): ReactElement => {
     <TableHead>
       <TableRow>
         {props.columns.map((column) => (
-          <TableCell key={column}>{column}</TableCell>
+          <TableCell key={column} sx={{ fontWeight: "bold"}}>
+            {column}
+          </TableCell>
         ))}
       </TableRow>
     </TableHead>

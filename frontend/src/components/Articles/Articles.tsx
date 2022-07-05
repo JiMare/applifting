@@ -2,8 +2,8 @@ import { ReactElement, useState, useEffect } from "react";
 import { Typography } from "@mui/material";
 import { Article } from "../../model/Article";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
-import { ArticlesTable } from "./ArticlesTable";
 import "./Articles.css";
+import { ArticleCard } from "./ArticleCard";
 
 export const Articles = (): ReactElement => {
   const [loadedArticles, setLoadedArticles] = useState<Article[]>([]);
@@ -34,7 +34,13 @@ export const Articles = (): ReactElement => {
   );
 
   if (loadedArticles.length > 0) {
-    articlesContent = <ArticlesTable articles={loadedArticles} />;
+    articlesContent = (
+      <>
+        {loadedArticles.map((article) => (
+          <ArticleCard article={article} />
+        ))}
+      </>
+    );
   }
   return articlesContent;
 };
