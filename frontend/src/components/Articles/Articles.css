@@ -3,3 +3,8 @@
   justify-content: center;
   margin-top: 2rem;
 }
+
+.greyText{
+  color: #6C757D;
+  font-weight: 400;
+}

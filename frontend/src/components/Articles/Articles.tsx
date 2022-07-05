@@ -1,5 +1,5 @@
 import { ReactElement, useState, useEffect } from "react";
-import { Typography } from "@mui/material";
+import { Typography, Container, Box } from "@mui/material";
 import { Article } from "../../model/Article";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import "./Articles.css";
@@ -35,11 +35,19 @@ export const Articles = (): ReactElement => {
 
   if (loadedArticles.length > 0) {
     articlesContent = (
-      <>
-        {loadedArticles.map((article) => (
-          <ArticleCard key={article.articleId} article={article} />
-        ))}
-      </>
+      <Container maxWidth="xl">
+        <Typography
+          variant="h1"
+          sx={{ fontSize: "2.5rem", fontWeight: 500, marginTop: "3rem" }}
+        >
+          Recent articles
+        </Typography>
+        <Box sx={{ marginTop: "3rem" }}>
+          {loadedArticles.map((article) => (
+            <ArticleCard key={article.articleId} article={article} />
+          ))}
+        </Box>
+      </Container>
     );
   }
   return articlesContent;

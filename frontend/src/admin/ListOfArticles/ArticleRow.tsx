@@ -11,8 +11,8 @@ type Props = {
 export const ArticleRow = (props: Props): ReactElement => {
   return (
     <TableRow>
-      <TableCell>{props.article.title}</TableCell>
-      <TableCell>{props.article.perex}</TableCell>
+      <TableCell>{props.article.title.slice(0, 20) + "..."}</TableCell>
+      <TableCell>{props.article.perex.slice(0, 100) + "..."}</TableCell>
       <TableCell>Jitka M</TableCell>
       <TableCell>5</TableCell>
       <TableCell>

@@ -67,7 +67,7 @@ export const ArticleDetail = (): ReactElement => {
     const newArticle = {
       articleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       title: data.title,
-      perex: data.content.slice(0, 100) + "...",
+      perex: data.content.slice(0, 500) + "...",
       imageId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       content: data.content,
     };
