@@ -37,13 +37,32 @@ export const ArticleDetail = (): ReactElement => {
     mode: "onChange",
   });
 
-  const onUploadImage = () => {
-    console.log("ahoj");
-  };
-
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: FormValues): Promise<void> => {
     const requestHeaders = getRequestHeaders();
     requestHeaders.set("Authorization", token);
+
+    const formData = new FormData();
+    formData.append("file", data.image[0]);
+
+    try {
+      const response = await fetch(
+        "https://fullstack.exercise.applifting.cz/images",
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: token,
+            "X-API-KEY": process.env.REACT_APP_API_KEY!,
+          },
+        }
+      );
+      const responseData = await response.json();
+      console.log(responseData.imageId);
+    } catch (error) {
+      console.error(error);
+    }
+
+    console.log(data);
 
     const newArticle = {
       articleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",

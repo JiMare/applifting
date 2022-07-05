@@ -37,7 +37,7 @@ export const Articles = (): ReactElement => {
     articlesContent = (
       <>
         {loadedArticles.map((article) => (
-          <ArticleCard article={article} />
+          <ArticleCard key={article.articleId} article={article} />
         ))}
       </>
     );
