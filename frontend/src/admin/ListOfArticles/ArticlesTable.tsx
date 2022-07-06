@@ -6,6 +6,7 @@ import { ArticlesTableHead } from "./ArticlesTableHead";
 
 type Props = {
   articles: Article[];
+  onDeleteArticleFromScreen: (id: string) => void;
 };
 
 const columns = [
@@ -22,7 +23,11 @@ export const ArticlesTable = (props: Props): ReactElement => {
       <ArticlesTableHead columns={columns} />
       <TableBody>
         {props.articles.map((article) => (
-          <ArticleRow key={article.articleId} article={article} />
+          <ArticleRow
+            key={article.articleId}
+            article={article}
+            onDeleteArticleFromScreen={props.onDeleteArticleFromScreen}
+          />
         ))}
       </TableBody>
     </Table>

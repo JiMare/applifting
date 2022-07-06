@@ -12,9 +12,10 @@ import {
   FormLabel,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
-import "./ArticleDetail.css";
+import "./ArticleForm.css";
 import MDEditor from "@uiw/react-md-editor";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
+import { v4 as uuidv4 } from "uuid";
 
 type FormValues = {
   title: string;
@@ -22,7 +23,7 @@ type FormValues = {
   content: string;
 };
 
-export const ArticleDetail = (): ReactElement => {
+export const ArticleForm = (): ReactElement => {
   const { token, isUser } = userStore.useStore(
     (store) => ({ token: store.token, isUser: store.isUser }),
     shallow
@@ -42,7 +43,7 @@ export const ArticleDetail = (): ReactElement => {
     requestHeaders.set("Authorization", token);
 
     const formData = new FormData();
-    formData.append("file", data.image[0]);
+    formData.append("image", data.image[0]);
 
     try {
       const response = await fetch(
@@ -57,26 +58,22 @@ export const ArticleDetail = (): ReactElement => {
         }
       );
       const responseData = await response.json();
-      console.log(responseData.imageId);
-    } catch (error) {
-      console.error(error);
-    }
-
-    console.log(data);
-
-    const newArticle = {
-      articleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      title: data.title,
-      perex: data.content.slice(0, 500) + "...",
-      imageId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      content: data.content,
-    };
-    try {
-      await fetch("https://fullstack.exercise.applifting.cz/articles", {
-        method: "POST",
-        body: JSON.stringify(newArticle),
-        headers: requestHeaders,
-      });
+      const newArticle = {
+        articleId: uuidv4(),
+        title: data.title,
+        perex: data.content.slice(0, 500) + "...",
+        imageId: responseData.imageId,
+        content: data.content,
+      };
+      try {
+        await fetch("https://fullstack.exercise.applifting.cz/articles", {
+          method: "POST",
+          body: JSON.stringify(newArticle),
+          headers: requestHeaders,
+        });
+      } catch (error) {
+        console.error(error);
+      }
     } catch (error) {
       console.error(error);
     }

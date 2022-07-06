@@ -4,7 +4,7 @@ import shallow from "zustand/shallow";
 import { Screen404 } from "../../components/Screen404/Screen404";
 import { Link } from "react-router-dom";
 import { Box, Button, Typography, Container } from "@mui/material";
-import "./ListOfArticles.css"
+import "./ListOfArticles.css";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import { Article } from "../../model/Article";
 import { ArticlesTable } from "./ArticlesTable";
@@ -15,26 +15,32 @@ export const ListOfArticles = (): ReactElement => {
     shallow
   );
 
-   const [loadedArticles, setLoadedArticles] = useState<Article[]>([]);
+  const [loadedArticles, setLoadedArticles] = useState<Article[]>([]);
 
-   useEffect(() => {
-     const fetchArticles = async () => {
-       try {
-         const response = await fetch(
-           "https://fullstack.exercise.applifting.cz/articles",
-           {
-             method: "GET",
-             headers: getRequestHeaders(),
-           }
-         );
-         const responseData = await response.json();
-         setLoadedArticles(responseData.items);
-       } catch (error) {
-         console.error(error);
-       }
-     };
-     fetchArticles();
-   }, []);
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch(
+          "https://fullstack.exercise.applifting.cz/articles",
+          {
+            method: "GET",
+            headers: getRequestHeaders(),
+          }
+        );
+        const responseData = await response.json();
+        setLoadedArticles(responseData.items);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchArticles();
+  }, []);
+
+  const onDeleteArticleFromScreen = (id: string): void => {
+    setLoadedArticles((prev) =>
+      prev.filter((article) => article.articleId !== id)
+    );
+  };
 
   const content = (
     <Container maxWidth="xl">
@@ -50,12 +56,15 @@ export const ListOfArticles = (): ReactElement => {
         <Typography variant="h1" sx={{ fontSize: "2.5rem", fontWeight: 500 }}>
           My articles
         </Typography>
-        <Link to="/admin-article-detail" className="link">
+        <Link to="/admin-article-form" className="link">
           <Button variant="contained">Create new article</Button>
         </Link>
       </Box>
       <div className="table">
-        <ArticlesTable articles={loadedArticles} />
+        <ArticlesTable
+          articles={loadedArticles}
+          onDeleteArticleFromScreen={onDeleteArticleFromScreen}
+        />
       </div>
     </Container>
   );

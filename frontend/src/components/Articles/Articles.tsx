@@ -4,7 +4,7 @@ import { Article } from "../../model/Article";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import "./Articles.css";
 import { ArticleCard } from "./ArticleCard";
-import { LoadingComponent } from "../LoadingComponent";
+import { LoadingComponent } from "../Loading/LoadingComponent";
 
 export const Articles = (): ReactElement => {
   const [loadedArticles, setLoadedArticles] = useState<Article[]>([]);

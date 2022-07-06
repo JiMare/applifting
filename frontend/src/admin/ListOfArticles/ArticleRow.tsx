@@ -3,12 +3,39 @@ import { Article } from "../../model/Article";
 import { TableRow, TableCell, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { getRequestHeaders } from "../../utils/getRequestHeaders";
+import { userStore } from "../../store/userStore";
+import shallow from "zustand/shallow";
 
 type Props = {
   article: Article;
+  onDeleteArticleFromScreen: (id: string) => void;
 };
 
 export const ArticleRow = (props: Props): ReactElement => {
+  const { token } = userStore.useStore(
+    (store) => ({ token: store.token }),
+    shallow
+  );
+  const onDeleteArticle = async (): Promise<void> => {
+    const requestHeaders = getRequestHeaders();
+    requestHeaders.set("Authorization", token);
+    try {
+      await fetch(
+        "https://fullstack.exercise.applifting.cz/articles/" +
+          props.article.articleId,
+        {
+          method: "DELETE",
+          headers: requestHeaders,
+        }
+      );
+      props.onDeleteArticleFromScreen(props.article.articleId);
+      console.log("smazano");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <TableRow>
       <TableCell>{props.article.title.slice(0, 20) + "..."}</TableCell>
@@ -19,7 +46,7 @@ export const ArticleRow = (props: Props): ReactElement => {
         <IconButton>
           <EditIcon />
         </IconButton>
-        <IconButton>
+        <IconButton onClick={onDeleteArticle}>
           <DeleteIcon />
         </IconButton>
       </TableCell>
