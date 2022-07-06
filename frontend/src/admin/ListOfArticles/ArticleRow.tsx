@@ -30,7 +30,6 @@ export const ArticleRow = (props: Props): ReactElement => {
         }
       );
       props.onDeleteArticleFromScreen(props.article.articleId);
-      console.log("smazano");
     } catch (error) {
       console.error(error);
     }

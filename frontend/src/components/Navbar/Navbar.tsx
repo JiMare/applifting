@@ -33,7 +33,7 @@ export const Navbar = (): ReactElement => {
           My Articles
         </Button>
       </Link>
-      <Link to="/admin-article-detail" className="link link--blue">
+      <Link to="/admin-article-form" className="link link--blue">
         <Button sx={{ my: 2, color: "inherit", display: "block" }}>
           Create Article
         </Button>
