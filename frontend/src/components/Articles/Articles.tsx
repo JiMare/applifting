@@ -4,13 +4,16 @@ import { Article } from "../../model/Article";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import "./Articles.css";
 import { ArticleCard } from "./ArticleCard";
+import { LoadingComponent } from "../LoadingComponent";
 
 export const Articles = (): ReactElement => {
   const [loadedArticles, setLoadedArticles] = useState<Article[]>([]);
+  const [processing, setProcessing] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
+        setProcessing(true);
         const response = await fetch(
           "https://fullstack.exercise.applifting.cz/articles",
           {
@@ -20,6 +23,7 @@ export const Articles = (): ReactElement => {
         );
         const responseData = await response.json();
         setLoadedArticles(responseData.items);
+        setProcessing(false);
       } catch (error) {
         console.error(error);
       }
@@ -50,5 +54,7 @@ export const Articles = (): ReactElement => {
       </Container>
     );
   }
-  return articlesContent;
+  return (
+    <LoadingComponent loading={processing}>{articlesContent}</LoadingComponent>
+  );
 };
