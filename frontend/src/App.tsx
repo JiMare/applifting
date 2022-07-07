@@ -7,6 +7,7 @@ import { Screen404 } from "./components/Screen404/Screen404";
 import { ListOfArticles } from "./admin/ListOfArticles/ListOfArticles";
 import { ArticleForm } from "./admin/ArticleDetail/ArticleForm";
 import { ArticleCardDetail } from "./components/Articles/ArticleCardDetail";
+import { About } from "./components/About/About";
 
 const App = (): ReactElement => {
   return (
@@ -19,7 +20,7 @@ const App = (): ReactElement => {
           <Route path="/admin-my-articles" element={<ListOfArticles />} />
           <Route path="/admin-article-form" element={<ArticleForm />} />
           <Route path="/recent-articles/:id" element={<ArticleCardDetail />} />
-          <Route path="/" element={<Screen404 />} />
+          <Route path="/" element={<About />} />
         </Routes>
       </BrowserRouter>
     </div>

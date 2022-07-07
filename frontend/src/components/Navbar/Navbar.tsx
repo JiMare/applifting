@@ -55,24 +55,28 @@ export const Navbar = (): ReactElement => {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <img src="logo.svg" alt="cat-logo" />
-          </IconButton>
+          <Link to="/" className="link">
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+            >
+              <img src="logo.svg" alt="cat-logo" />
+            </IconButton>
+          </Link>
           <Box sx={{ flexGrow: 1, display: "flex", gap: "2.5rem" }}>
             <Link to="/recent-articles" className="link">
               <Button sx={{ my: 2, color: "inherit", display: "block" }}>
                 Recent Articles
               </Button>
             </Link>
-            <Button sx={{ my: 2, color: "inherit", display: "block" }}>
-              About
-            </Button>
+            <Link to="/" className="link">
+              <Button sx={{ my: 2, color: "inherit", display: "block" }}>
+                About
+              </Button>
+            </Link>
           </Box>
           {rightSide}
         </Toolbar>
