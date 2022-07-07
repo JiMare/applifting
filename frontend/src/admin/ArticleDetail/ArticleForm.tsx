@@ -50,6 +50,7 @@ export const ArticleForm = (): ReactElement => {
         "https://fullstack.exercise.applifting.cz/images",
         {
           method: "POST",
+          mode: "cors",
           body: formData,
           headers: {
             Authorization: token,
@@ -68,6 +69,7 @@ export const ArticleForm = (): ReactElement => {
       try {
         await fetch("https://fullstack.exercise.applifting.cz/articles", {
           method: "POST",
+          mode: "cors",
           body: JSON.stringify(newArticle),
           headers: requestHeaders,
         });

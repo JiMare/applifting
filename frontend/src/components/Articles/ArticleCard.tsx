@@ -26,7 +26,6 @@ export const ArticleCard = (props: Props): ReactElement => {
         const imageBlob = await response.blob();
         const imageObjectURL = URL.createObjectURL(imageBlob);
         setLoadedImageUrl(imageObjectURL);
-        console.log(imageBlob);
       } catch (error) {
         console.error(error);
       }
@@ -35,8 +34,8 @@ export const ArticleCard = (props: Props): ReactElement => {
   }, [props.article.imageId]);
 
   return (
-    <Box sx={{ display: "flex", marginBottom: "2rem" }}>
-      <img src={loadedImageUrl} alt="some-cat" />
+    <Box sx={{ display: "flex", marginBottom: "2rem" }}> 
+        <img src={loadedImageUrl} alt="some-cat" />
       <Container maxWidth="sm">
         <Typography variant="h4"> {props.article.title}</Typography>
         <p className="greyText">
