@@ -46,7 +46,6 @@ export const ArticleCard = (props: Props): ReactElement => {
       </Box>
       <Box className="article__content">
         <Typography variant="h4" sx={{ fontSize: "1.5rem" }}>
-          {" "}
           {props.article.title}
         </Typography>
         <p className="article__grey-text">

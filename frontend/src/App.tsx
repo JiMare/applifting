@@ -19,7 +19,7 @@ const App = (): ReactElement => {
           <Route path="/login" element={<Login />} />
           <Route path="/admin-my-articles" element={<ListOfArticles />} />
           <Route path="/admin-article-form" element={<ArticleForm />} />
-          <Route path="/recent-articles/:id" element={<ArticleCardDetail />} />
+          <Route path="/recent-articles/:articleId" element={<ArticleCardDetail />} />
           <Route path="/" element={<About />} />
         </Routes>
       </BrowserRouter>
