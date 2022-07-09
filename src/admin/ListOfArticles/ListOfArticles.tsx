@@ -10,8 +10,8 @@ import { Article } from "../../model/Article";
 import { ArticlesTable } from "./ArticlesTable";
 
 export const ListOfArticles = (): ReactElement => {
-  const { token, isUser } = userStore.useStore(
-    (store) => ({ token: store.token, isUser: store.isUser }),
+  const { isUser } = userStore.useStore(
+    (store) => ({ isUser: store.isUser }),
     shallow
   );
 

@@ -1,5 +1,5 @@
 import { ReactElement, useEffect, useState } from "react";
-import { Box, Button, Typography, Container } from "@mui/material";
+import { Box, Typography, Container } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import { ArticleDetail } from "../../model/ArticleDetail";
