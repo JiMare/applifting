@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useState, useEffect } from "react";
 import { userStore } from "../../store/userStore";
 import shallow from "zustand/shallow";
 import { Screen404 } from "../../components/Screen404/Screen404";
@@ -28,6 +28,8 @@ type FormValues = {
 export const ArticleForm = (): ReactElement => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isPublished, setIsPublished] = useState<boolean>(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
 
   const { token, isUser } = userStore.useStore(
     (store) => ({ token: store.token, isUser: store.isUser }),
@@ -48,14 +50,36 @@ export const ArticleForm = (): ReactElement => {
     mode: "onChange",
   });
 
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreview(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreview(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
+
+  const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setSelectedFile(null);
+    } else {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
   const createNewArticle = async (data: FormValues): Promise<void> => {
     setErrorMessage("");
     const requestHeaders = getRequestHeaders();
     requestHeaders.set("Authorization", token);
 
     const formData = new FormData();
-    formData.append("image", data.image[0]);
-
+    if (selectedFile) {
+      formData.append("image", selectedFile);
+    } else {
+      setErrorMessage("Image wasn't uploaded!");
+      return;
+    }
     try {
       const response = await fetch(
         "https://fullstack.exercise.applifting.cz/images",
@@ -153,9 +177,11 @@ export const ArticleForm = (): ReactElement => {
           id="contained-button-file"
           type="file"
           className="input"
+          onChange={onSelectFile}
         />
         <FormLabel htmlFor="contained-button-file" className="label">
           Featured Image
+          {selectedFile && preview && <img src={preview} alt="uploaded" />}
           <Button
             component="span"
             sx={{
