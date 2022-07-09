@@ -1,10 +1,11 @@
 import { ReactElement, useEffect, useState } from "react";
 import { Article } from "../../model/Article";
-import { Box, Button, Typography, Container } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import "./Articles.css";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
+import { Loading } from "../Loading/Loading";
 
 type Props = {
   article: Article;
@@ -12,9 +13,11 @@ type Props = {
 
 export const ArticleCard = (props: Props): ReactElement => {
   const [loadedImageUrl, setLoadedImageUrl] = useState<string>("");
+  const [processing, setProcessing] = useState(false);
   useEffect(() => {
     const fetchImage = async (): Promise<void> => {
       try {
+        setProcessing(true);
         const response = await fetch(
           "https://fullstack.exercise.applifting.cz/images/" +
             props.article.imageId,
@@ -26,6 +29,7 @@ export const ArticleCard = (props: Props): ReactElement => {
         const imageBlob = await response.blob();
         const imageObjectURL = URL.createObjectURL(imageBlob);
         setLoadedImageUrl(imageObjectURL);
+         setProcessing(false);
       } catch (error) {
         console.error(error);
       }
@@ -35,9 +39,16 @@ export const ArticleCard = (props: Props): ReactElement => {
 
   return (
     <Box className="article">
-      <img src={loadedImageUrl} alt="some-cat" className="article__image" />
+      <Box className="article__image-box">
+        <Loading loading={processing}>
+          <img src={loadedImageUrl} alt="some-cat" className="article__image" />
+        </Loading>
+      </Box>
       <Box className="article__content">
-        <Typography variant="h4" sx={{fontSize: "1.5rem"}}> {props.article.title}</Typography>
+        <Typography variant="h4" sx={{ fontSize: "1.5rem" }}>
+          {" "}
+          {props.article.title}
+        </Typography>
         <p className="article__grey-text">
           Jitka M - {format(new Date(props.article.createdAt), "MM/dd/yy")}
         </p>

@@ -4,7 +4,7 @@ import { Article } from "../../model/Article";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import "./Articles.css";
 import { ArticleCard } from "./ArticleCard";
-import { LoadingComponent } from "../Loading/LoadingComponent";
+import { Loading } from "../Loading/Loading";
 
 export const Articles = (): ReactElement => {
   const [loadedArticles, setLoadedArticles] = useState<Article[]>([]);
@@ -55,6 +55,6 @@ export const Articles = (): ReactElement => {
     );
   }
   return (
-    <LoadingComponent loading={processing}>{articlesContent}</LoadingComponent>
+    <Loading loading={processing}>{articlesContent}</Loading>
   );
 };

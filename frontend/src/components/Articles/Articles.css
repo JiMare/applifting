@@ -33,6 +33,12 @@
   margin-top: 2rem;
 }
 
+.article__image-box {
+  position: relative;
+  width: 17rem;
+  height: 15.25rem;
+}
+
 @media screen and (min-width: 650px) {
   .article {
     flex-direction: row;
