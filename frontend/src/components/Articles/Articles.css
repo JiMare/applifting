@@ -39,6 +39,12 @@
   height: 15.25rem;
 }
 
+.article-detail__image-box {
+  position: relative;
+  width: 47.5rem;
+  height: 31.5rem;
+}
+
 .article-detail__content {
   font-size: 1.25rem;
   line-height: 2rem;

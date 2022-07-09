@@ -5,10 +5,12 @@ import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import { ArticleDetail } from "../../model/ArticleDetail";
 import { format } from "date-fns";
 import "./Articles.css";
+import { Loading } from "../Loading/Loading";
 
 export const ArticleCardDetail = (): ReactElement => {
   const [articleData, setArticleData] = useState<ArticleDetail | null>(null);
   const [loadedImageUrl, setLoadedImageUrl] = useState<string>("");
+  const [processing, setProcessing] = useState<boolean>(false);
   let { articleId } = useParams();
   useEffect(() => {
     const fetchArticle = async (id?: string): Promise<void> => {
@@ -24,17 +26,19 @@ export const ArticleCardDetail = (): ReactElement => {
           const responseData = await response.json();
           setArticleData(responseData);
           try {
-              const responseImage = await fetch(
-                "https://fullstack.exercise.applifting.cz/images/" +
-                  responseData.imageId,
-                {
-                  method: "GET",
-                  headers: getRequestHeaders(),
-                }
-              );
-              const imageBlob = await responseImage.blob();
-              const imageObjectURL = URL.createObjectURL(imageBlob);
-              setLoadedImageUrl(imageObjectURL);
+            setProcessing(true);
+            const responseImage = await fetch(
+              "https://fullstack.exercise.applifting.cz/images/" +
+                responseData.imageId,
+              {
+                method: "GET",
+                headers: getRequestHeaders(),
+              }
+            );
+            const imageBlob = await responseImage.blob();
+            const imageObjectURL = URL.createObjectURL(imageBlob);
+            setLoadedImageUrl(imageObjectURL);
+            setProcessing(false);
           } catch (error) {
             console.error(error);
           }
@@ -60,11 +64,15 @@ export const ArticleCardDetail = (): ReactElement => {
             Jitka M - {format(new Date(articleData.createdAt), "d.M.yyyy")}
           </p>
           {loadedImageUrl && (
-            <img
-              src={loadedImageUrl}
-              alt="article"
-              className="article-detail__image"
-            />
+            <Box className="article-detail__image-box">
+              <Loading loading={processing}>
+                <img
+                  src={loadedImageUrl}
+                  alt="article"
+                  className="article-detail__image"
+                />
+              </Loading>
+            </Box>
           )}
           {articleData.content.split("\n").map((text, index) => (
             <p key={index} className="article-detail__content">
