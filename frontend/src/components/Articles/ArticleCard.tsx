@@ -34,21 +34,21 @@ export const ArticleCard = (props: Props): ReactElement => {
   }, [props.article.imageId]);
 
   return (
-    <Box sx={{ display: "flex", marginBottom: "2rem" }}> 
-        <img src={loadedImageUrl} alt="some-cat" />
-      <Container maxWidth="sm">
-        <Typography variant="h4"> {props.article.title}</Typography>
-        <p className="greyText">
+    <Box className="article">
+      <img src={loadedImageUrl} alt="some-cat" className="article__image" />
+      <Box className="article__content">
+        <Typography variant="h4" sx={{fontSize: "1.5rem"}}> {props.article.title}</Typography>
+        <p className="article__grey-text">
           Jitka M - {format(new Date(props.article.createdAt), "MM/dd/yy")}
         </p>
-        <p>{props.article.perex}</p>
+        <p className="article__perex">{props.article.perex}</p>
         <Link
           to={`/recent-articles/${props.article.articleId}`}
           className="link"
         >
           <Button>Read whole article</Button>
         </Link>
-      </Container>
+      </Box>
     </Box>
   );
 };
