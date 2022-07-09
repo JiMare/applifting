@@ -17,6 +17,7 @@ import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import { v4 as uuidv4 } from "uuid";
 import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
 import { Navigate } from "react-router-dom";
+import { articleStore } from "../../store/articleStore";
 
 type FormValues = {
   title: string;
@@ -33,6 +34,11 @@ export const ArticleForm = (): ReactElement => {
     shallow
   );
 
+  const { articleIdToUpdate } = articleStore.useStore(
+    (store) => ({ articleIdToUpdate: store.articleIdToUpdate }),
+    shallow
+  );
+
   const {
     register,
     handleSubmit,
@@ -42,7 +48,7 @@ export const ArticleForm = (): ReactElement => {
     mode: "onChange",
   });
 
-  const onSubmit = async (data: FormValues): Promise<void> => {
+  const createNewArticle = async (data: FormValues): Promise<void> => {
     setErrorMessage("");
     const requestHeaders = getRequestHeaders();
     requestHeaders.set("Authorization", token);
@@ -94,6 +100,19 @@ export const ArticleForm = (): ReactElement => {
     }
   };
 
+  const updateArticle = async (data: FormValues): Promise<void> => {
+    setErrorMessage("");
+    console.log("edituji");
+  };
+
+  const onSubmit = async (data: FormValues): Promise<void> => {
+    if (articleIdToUpdate) {
+      await updateArticle(data);
+    } else {
+      await createNewArticle(data);
+    }
+  };
+
   if (isPublished) {
     return <Navigate to="/admin-my-articles" replace />;
   }
@@ -110,7 +129,7 @@ export const ArticleForm = (): ReactElement => {
           }}
         >
           <Typography variant="h1" sx={{ fontSize: "2.5rem", fontWeight: 500 }}>
-            Create new article
+            {articleIdToUpdate ? "Edit article" : "Create new article"}
           </Typography>
           <Button variant="contained" type="submit">
             Publish Article

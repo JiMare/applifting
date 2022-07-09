@@ -12,6 +12,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import "./Navbar.css";
 import { userStore } from "../../store/userStore";
 import shallow from "zustand/shallow";
+import { clearArticleIdToUpdate } from "../../actions/articleActions";
 
 export const Navbar = (): ReactElement => {
   const { isUser } = userStore.useStore(
@@ -34,7 +35,7 @@ export const Navbar = (): ReactElement => {
         </Button>
       </Link>
       <Link to="/admin-article-form" className="link link--blue">
-        <Button sx={{ my: 2, color: "inherit", display: "block" }}>
+        <Button sx={{ my: 2, color: "inherit", display: "block" }} onClick={clearArticleIdToUpdate}>
           Create Article
         </Button>
       </Link>

@@ -6,6 +6,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import { userStore } from "../../store/userStore";
 import shallow from "zustand/shallow";
+import { keepArticleIdToUpdate } from "../../actions/articleActions";
+import { Link } from "react-router-dom";
 
 type Props = {
   article: Article;
@@ -17,6 +19,7 @@ export const ArticleRow = (props: Props): ReactElement => {
     (store) => ({ token: store.token }),
     shallow
   );
+
   const onDeleteArticle = async (): Promise<void> => {
     const requestHeaders = getRequestHeaders();
     requestHeaders.set("Authorization", token);
@@ -35,6 +38,10 @@ export const ArticleRow = (props: Props): ReactElement => {
     }
   };
 
+  const onEditArticle = () => {
+    keepArticleIdToUpdate(props.article.articleId);
+  };
+
   return (
     <TableRow>
       <TableCell>{props.article.title.slice(0, 20) + "..."}</TableCell>
@@ -42,9 +49,11 @@ export const ArticleRow = (props: Props): ReactElement => {
       <TableCell>Jitka M</TableCell>
       <TableCell>5</TableCell>
       <TableCell>
-        <IconButton>
-          <EditIcon />
-        </IconButton>
+        <Link to="/admin-article-form">
+          <IconButton onClick={onEditArticle}>
+            <EditIcon />
+          </IconButton>
+        </Link>
         <IconButton onClick={onDeleteArticle}>
           <DeleteIcon />
         </IconButton>
