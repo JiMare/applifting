@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { userStore } from "../../store/userStore";
 import shallow from "zustand/shallow";
 import { Screen404 } from "../../components/Screen404/Screen404";
@@ -15,6 +15,8 @@ import "./ArticleForm.css";
 import MDEditor from "@uiw/react-md-editor";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import { v4 as uuidv4 } from "uuid";
+import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
+import { Navigate } from "react-router-dom";
 
 type FormValues = {
   title: string;
@@ -23,6 +25,9 @@ type FormValues = {
 };
 
 export const ArticleForm = (): ReactElement => {
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isPublished, setIsPublished] = useState<boolean>(false);
+
   const { token, isUser } = userStore.useStore(
     (store) => ({ token: store.token, isUser: store.isUser }),
     shallow
@@ -38,6 +43,7 @@ export const ArticleForm = (): ReactElement => {
   });
 
   const onSubmit = async (data: FormValues): Promise<void> => {
+    setErrorMessage("");
     const requestHeaders = getRequestHeaders();
     requestHeaders.set("Authorization", token);
 
@@ -66,19 +72,31 @@ export const ArticleForm = (): ReactElement => {
         content: data.content,
       };
       try {
-        await fetch("https://fullstack.exercise.applifting.cz/articles", {
-          method: "POST",
-          mode: "cors",
-          body: JSON.stringify(newArticle),
-          headers: requestHeaders,
-        });
+        const articleResponse = await fetch(
+          "https://fullstack.exercise.applifting.cz/articles",
+          {
+            method: "POST",
+            mode: "cors",
+            body: JSON.stringify(newArticle),
+            headers: requestHeaders,
+          }
+        );
+        if (articleResponse.ok) {
+          setIsPublished(true);
+        }
       } catch (error) {
         console.error(error);
+        setErrorMessage("Something went wrong, your article wasn't created!");
       }
     } catch (error) {
       console.error(error);
+      setErrorMessage("Something went wrong, your image wasn't uploaded!");
     }
   };
+
+  if (isPublished) {
+    return <Navigate to="/admin-my-articles" replace />;
+  }
 
   const content = (
     <Container maxWidth="xl">
@@ -143,6 +161,7 @@ export const ArticleForm = (): ReactElement => {
           control={control}
         />
       </form>
+      {errorMessage && <ErrorMessage message={errorMessage} />}
     </Container>
   );
   return isUser ? content : <Screen404 />;
