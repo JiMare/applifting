@@ -16,6 +16,7 @@ export const ArticleCardDetail = (): ReactElement => {
     const fetchArticle = async (id?: string): Promise<void> => {
       try {
         if (id) {
+          setProcessing(true);
           const response = await fetch(
             "https://fullstack.exercise.applifting.cz/articles/" + id,
             {
@@ -26,7 +27,6 @@ export const ArticleCardDetail = (): ReactElement => {
           const responseData = await response.json();
           setArticleData(responseData);
           try {
-            setProcessing(true);
             const responseImage = await fetch(
               "https://fullstack.exercise.applifting.cz/images/" +
                 responseData.imageId,
@@ -51,36 +51,34 @@ export const ArticleCardDetail = (): ReactElement => {
   }, [articleId]);
 
   return (
-    <Container maxWidth="xl">
-      {articleData && (
-        <Box sx={{ width: "47.5rem" }}>
-          <Typography
-            variant="h4"
-            sx={{ fontSize: "2.5rem", fontWeight: 500, marginTop: "3rem" }}
-          >
-            {articleData.title}
-          </Typography>
-          <p className="article__grey-text">
-            Jitka M - {format(new Date(articleData.createdAt), "d.M.yyyy")}
-          </p>
-          {loadedImageUrl && (
-            <Box className="article-detail__image-box">
-              <Loading loading={processing}>
-                <img
-                  src={loadedImageUrl}
-                  alt="article"
-                  className="article-detail__image"
-                />
-              </Loading>
-            </Box>
-          )}
-          {articleData.content.split("\n").map((text, index) => (
-            <p key={index} className="article-detail__content">
-              {text}
+    <Loading loading={processing}>
+      <Container maxWidth="xl">
+        {articleData && (
+          <Box sx={{ width: "47.5rem" }}>
+            <Typography
+              variant="h4"
+              sx={{ fontSize: "2.5rem", fontWeight: 500, marginTop: "3rem" }}
+            >
+              {articleData.title}
+            </Typography>
+            <p className="article__grey-text">
+              Jitka M - {format(new Date(articleData.createdAt), "d.M.yyyy")}
             </p>
-          ))}
-        </Box>
-      )}
-    </Container>
+            {loadedImageUrl && (
+              <img
+                src={loadedImageUrl}
+                alt="article"
+                className="article-detail__image"
+              />
+            )}
+            {articleData.content.split("\n").map((text, index) => (
+              <p key={index} className="article-detail__content">
+                {text}
+              </p>
+            ))}
+          </Box>
+        )}
+      </Container>
+    </Loading>
   );
 };
