@@ -8,7 +8,6 @@ import {
   Typography,
   Container,
   TextField,
-  Fab,
   FormLabel,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
@@ -120,9 +119,8 @@ export const ArticleForm = (): ReactElement => {
         />
         <FormLabel htmlFor="contained-button-file" className="label">
           Featured Image
-          <Fab
+          <Button
             component="span"
-            variant="extended"
             sx={{
               backgroundColor: "#6C757D",
               color: "#ffff",
@@ -131,7 +129,7 @@ export const ArticleForm = (): ReactElement => {
             }}
           >
             Upload an Image
-          </Fab>
+          </Button>
         </FormLabel>
 
         <Controller
