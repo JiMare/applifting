@@ -76,10 +76,8 @@ export const ArticleForm = (): ReactElement => {
     const formData = new FormData();
     if (selectedFile) {
       formData.append("image", selectedFile);
-    } else {
-      setErrorMessage("Image wasn't uploaded!");
-      return;
     }
+
     try {
       const response = await fetch(
         "https://fullstack.exercise.applifting.cz/images",
@@ -94,14 +92,14 @@ export const ArticleForm = (): ReactElement => {
         }
       );
       const responseData = await response.json();
-      const newArticle = {
-        articleId: uuidv4(),
-        title: data.title,
-        perex: data.content.slice(0, 500) + "...",
-        imageId: responseData[0].imageId,
-        content: data.content,
-      };
       try {
+        const newArticle = {
+          articleId: uuidv4(),
+          title: data.title,
+          perex: data.content.slice(0, 500) + "...",
+          imageId: responseData[0].imageId,
+          content: data.content,
+        };
         const articleResponse = await fetch(
           "https://fullstack.exercise.applifting.cz/articles",
           {
@@ -172,7 +170,9 @@ export const ArticleForm = (): ReactElement => {
         />
 
         <input
-          {...register("image")}
+          {...register("image", {
+            required: "Image is required",
+          })}
           accept="*.jpeg, *.png, *.jpg"
           id="contained-button-file"
           type="file"
@@ -194,16 +194,23 @@ export const ArticleForm = (): ReactElement => {
             Upload an Image
           </Button>
         </FormLabel>
+        {errors.image?.message && (
+          <ErrorMessage message={String(errors.image.message)} />
+        )}
 
         <Controller
           render={({ field }) => (
             <div className="editor">
               <FormLabel htmlFor="editor">Content</FormLabel>
               <MDEditor {...field} id="editor" />
+              {errors.content?.message && (
+                <ErrorMessage message={errors.content.message} />
+              )}
             </div>
           )}
           name="content"
           control={control}
+          rules={{ required: "Content is required" }}
         />
       </form>
       {errorMessage && <ErrorMessage message={errorMessage} />}
