@@ -6,7 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import { userStore } from "../../store/userStore";
 import shallow from "zustand/shallow";
-import { keepArticleIdToUpdate, keepArticleToUpdate } from "../../actions/articleActions";
+import { keepArticleToUpdate } from "../../actions/articleActions";
 import { Link } from "react-router-dom";
 
 type Props = {

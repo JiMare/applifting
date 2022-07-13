@@ -12,7 +12,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import "./Navbar.css";
 import { userStore } from "../../store/userStore";
 import shallow from "zustand/shallow";
-import { clearArticleIdToUpdate, clearArticleToUpdate } from "../../actions/articleActions";
+import { clearArticleToUpdate } from "../../actions/articleActions";
 
 export const Navbar = (): ReactElement => {
   const { isUser } = userStore.useStore(

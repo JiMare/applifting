@@ -8,7 +8,7 @@ import "./ListOfArticles.css";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import { Article } from "../../model/Article";
 import { ArticlesTable } from "./ArticlesTable";
-import { clearArticleIdToUpdate, clearArticleToUpdate } from "../../actions/articleActions";
+import { clearArticleToUpdate } from "../../actions/articleActions";
 
 export const ListOfArticles = (): ReactElement => {
   const { isUser } = userStore.useStore(
