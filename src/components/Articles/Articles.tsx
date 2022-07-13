@@ -48,7 +48,10 @@ export const Articles = (): ReactElement => {
         </Typography>
         <Box sx={{ marginTop: "3rem" }}>
           {loadedArticles.map((article) => (
-            <ArticleCard key={article.articleId} article={article} />
+            <ArticleCard
+              key={article.articleId}
+              article={article}
+            />
           ))}
         </Box>
       </Container>

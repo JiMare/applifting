@@ -6,7 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import { userStore } from "../../store/userStore";
 import shallow from "zustand/shallow";
-import { keepArticleIdToUpdate } from "../../actions/articleActions";
+import { keepArticleIdToUpdate, keepArticleToUpdate } from "../../actions/articleActions";
 import { Link } from "react-router-dom";
 
 type Props = {
@@ -38,9 +38,22 @@ export const ArticleRow = (props: Props): ReactElement => {
     }
   };
 
-  const onEditArticle = () => {
-    keepArticleIdToUpdate(props.article.articleId);
-  };
+  const onEditArticle = async (): Promise<void> => {
+      try {
+        const response = await fetch(
+          "https://fullstack.exercise.applifting.cz/articles/" + props.article.articleId,
+          {
+            method: "GET",
+            headers: getRequestHeaders(),
+          }
+        );
+        const responseData = await response.json();
+        keepArticleToUpdate(responseData);     
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
 
   return (
     <TableRow>

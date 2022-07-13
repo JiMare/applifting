@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
 import { Navigate } from "react-router-dom";
 import { articleStore } from "../../store/articleStore";
+import { ArticleDetail } from "../../model/ArticleDetail";
 
 type FormValues = {
   title: string;
@@ -28,16 +29,16 @@ type FormValues = {
 export const ArticleForm = (): ReactElement => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isPublished, setIsPublished] = useState<boolean>(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null | Blob>(null);
+  const [preview, setPreview] = useState<string>("");
 
   const { token, isUser } = userStore.useStore(
     (store) => ({ token: store.token, isUser: store.isUser }),
     shallow
   );
 
-  const { articleIdToUpdate } = articleStore.useStore(
-    (store) => ({ articleIdToUpdate: store.articleIdToUpdate }),
+  const { articleToUpdate } = articleStore.useStore(
+    (store) => ({ articleToUpdate: store.articleToUpdate }),
     shallow
   );
 
@@ -45,14 +46,43 @@ export const ArticleForm = (): ReactElement => {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     mode: "onChange",
   });
 
+  const getEditableImage = async (id: string): Promise<void> => {
+    try {
+      const imageResponse = await fetch(
+        "https://fullstack.exercise.applifting.cz/images/" + id,
+        {
+          method: "GET",
+          headers: getRequestHeaders(),
+        }
+      );
+      const imageBlob = await imageResponse.blob();
+      setSelectedFile(imageBlob);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (articleToUpdate) {
+      getEditableImage(articleToUpdate.imageId);
+      setValue("title", articleToUpdate.title);
+      setValue("content", articleToUpdate.content);
+      return;
+    }
+    setValue("title", "");
+    setValue("content", "");
+    setSelectedFile(null);
+  }, [articleToUpdate, setValue]);
+
   useEffect(() => {
     if (!selectedFile) {
-      setPreview(null);
+      setPreview("");
       return;
     }
     const objectUrl = URL.createObjectURL(selectedFile);
@@ -124,11 +154,60 @@ export const ArticleForm = (): ReactElement => {
 
   const updateArticle = async (data: FormValues): Promise<void> => {
     setErrorMessage("");
-    console.log("edituji");
+    const requestHeaders = getRequestHeaders();
+    requestHeaders.set("Authorization", token);
+
+    const formData = new FormData();
+    if (selectedFile) {
+      formData.append("image", selectedFile);
+    }
+    try {
+      const response = await fetch(
+        "https://fullstack.exercise.applifting.cz/images",
+        {
+          method: "POST",
+          mode: "cors",
+          body: formData,
+          headers: {
+            Authorization: token,
+            "X-API-KEY": process.env.REACT_APP_API_KEY!,
+          },
+        }
+      );
+      const responseData = await response.json();
+      try {
+        const updatedArticle = {
+          articleId: articleToUpdate?.articleId,
+          title: data.title,
+          perex: data.content.slice(0, 500) + "...",
+          imageId: responseData[0].imageId,
+          content: data.content,
+        };
+        const articleResponse = await fetch(
+          "https://fullstack.exercise.applifting.cz/articles/" +
+            articleToUpdate?.articleId,
+          {
+            method: "PATCH",
+            mode: "cors",
+            body: JSON.stringify(updatedArticle),
+            headers: requestHeaders,
+          }
+        );
+        if (articleResponse.ok) {
+          setIsPublished(true);
+        }
+      } catch (error) {
+        console.error(error);
+        setErrorMessage("Something went wrong, your article wasn't updated!");
+      }
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Something went wrong, your image wasn't uploaded!");
+    }
   };
 
   const onSubmit = async (data: FormValues): Promise<void> => {
-    if (articleIdToUpdate) {
+    if (articleToUpdate) {
       await updateArticle(data);
     } else {
       await createNewArticle(data);
@@ -151,7 +230,7 @@ export const ArticleForm = (): ReactElement => {
           }}
         >
           <Typography variant="h1" sx={{ fontSize: "2.5rem", fontWeight: 500 }}>
-            {articleIdToUpdate ? "Edit article" : "Create new article"}
+            {articleToUpdate ? "Edit article" : "Create new article"}
           </Typography>
           <Button variant="contained" type="submit">
             Publish Article
@@ -162,6 +241,7 @@ export const ArticleForm = (): ReactElement => {
           sx={{ marginBottom: "1.5rem" }}
           label="Article Title"
           fullWidth
+          autoFocus
           {...register("title", {
             required: "Title is required",
           })}
@@ -181,7 +261,7 @@ export const ArticleForm = (): ReactElement => {
         />
         <FormLabel htmlFor="contained-button-file" className="label">
           Featured Image
-          {selectedFile && preview && <img src={preview} alt="uploaded" />}
+          {preview && <img src={preview} alt="uploaded" />}
           <Button
             component="span"
             sx={{

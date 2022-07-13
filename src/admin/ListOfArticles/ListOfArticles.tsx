@@ -8,7 +8,7 @@ import "./ListOfArticles.css";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import { Article } from "../../model/Article";
 import { ArticlesTable } from "./ArticlesTable";
-import { clearArticleIdToUpdate } from "../../actions/articleActions";
+import { clearArticleIdToUpdate, clearArticleToUpdate } from "../../actions/articleActions";
 
 export const ListOfArticles = (): ReactElement => {
   const { isUser } = userStore.useStore(
@@ -58,7 +58,7 @@ export const ListOfArticles = (): ReactElement => {
           My articles
         </Typography>
         <Link to="/admin-article-form" className="link">
-          <Button variant="contained" onClick={clearArticleIdToUpdate}>Create new article</Button>
+          <Button variant="contained" onClick={clearArticleToUpdate}>Create new article</Button>
         </Link>
       </Box>
       <div className="table">
