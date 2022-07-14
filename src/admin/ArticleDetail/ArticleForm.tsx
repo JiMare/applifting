@@ -9,7 +9,7 @@ import {
   Container,
   TextField,
   FormLabel,
-  Alert
+  Alert,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import "./ArticleForm.css";
@@ -163,7 +163,6 @@ export const ArticleForm = (): ReactElement => {
       formData.append("image", selectedFile);
     }
     try {
-   
       const response = await fetch(
         "https://fullstack.exercise.applifting.cz/images",
         {
@@ -182,7 +181,9 @@ export const ArticleForm = (): ReactElement => {
           articleId: articleToUpdate?.articleId,
           title: data.title,
           perex: data.content.slice(0, 500) + "...",
-          imageId: responseData.length ? responseData[0].imageId : articleToUpdate?.imageId,
+          imageId: responseData.length
+            ? responseData[0].imageId
+            : articleToUpdate?.imageId,
           content: data.content,
         };
         const articleResponse = await fetch(
@@ -199,7 +200,6 @@ export const ArticleForm = (): ReactElement => {
           setIsPublished(true);
         }
       } catch (error) {
-        console.error(error);
         setErrorMessage("Something went wrong, your article wasn't updated!");
       }
     } catch (error) {
