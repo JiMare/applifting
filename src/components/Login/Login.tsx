@@ -106,7 +106,7 @@ export const Login = (): ReactElement => {
             helperText={errors.password?.message}
           />
           {errorMessage && (
-            <Typography variant="h6" sx={{ color: "red" }}>
+            <Typography variant="h6" sx={{ color: "#d32f2f" }}>
               {errorMessage}
             </Typography>
           )}

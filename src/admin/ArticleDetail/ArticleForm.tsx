@@ -9,6 +9,7 @@ import {
   Container,
   TextField,
   FormLabel,
+  Alert
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import "./ArticleForm.css";
@@ -68,6 +69,7 @@ export const ArticleForm = (): ReactElement => {
   };
 
   useEffect(() => {
+    setErrorMessage("");
     if (articleToUpdate) {
       getEditableImage(articleToUpdate.imageId);
       setValue("title", articleToUpdate.title);
@@ -221,6 +223,7 @@ export const ArticleForm = (): ReactElement => {
   const content = (
     <Container maxWidth="xl">
       <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         <Box
           sx={{
             flexGrow: 1,
@@ -251,7 +254,7 @@ export const ArticleForm = (): ReactElement => {
 
         <input
           {...register("image", {
-           required: !selectedFile && "Image is required",
+            required: !selectedFile && "Image is required",
           })}
           accept="*.jpeg, *.png, *.jpg"
           id="contained-button-file"
@@ -294,7 +297,6 @@ export const ArticleForm = (): ReactElement => {
           rules={{ required: "Content is required" }}
         />
       </form>
-      {errorMessage && <ErrorMessage message={errorMessage} />}
     </Container>
   );
   return isUser ? content : <Screen404 />;
