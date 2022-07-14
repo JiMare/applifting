@@ -29,35 +29,29 @@ export const Articles = (): ReactElement => {
       }
     };
     fetchArticles();
+    
   }, []);
 
-  let articlesContent = (
-    <Typography variant="h1" className="center">
-      No articles available.
-    </Typography>
-  );
+  let articlesTitle = "Recent articles";
+  if(loadedArticles.length === 0 && !processing){
+    articlesTitle = "No articles available";
+  }
 
-  if (loadedArticles.length > 0) {
-    articlesContent = (
+  return (
+    <Loading loading={processing}>
       <Container maxWidth="xl">
         <Typography
           variant="h1"
           sx={{ fontSize: "2.5rem", fontWeight: 500, marginTop: "3rem" }}
         >
-          Recent articles
+          {articlesTitle}
         </Typography>
         <Box sx={{ marginTop: "3rem" }}>
           {loadedArticles.map((article) => (
-            <ArticleCard
-              key={article.articleId}
-              article={article}
-            />
+            <ArticleCard key={article.articleId} article={article} />
           ))}
         </Box>
       </Container>
-    );
-  }
-  return (
-    <Loading loading={processing}>{articlesContent}</Loading>
+    </Loading>
   );
 };
