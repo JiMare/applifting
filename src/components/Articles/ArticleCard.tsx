@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { getRequestHeaders } from "../../utils/getRequestHeaders";
 import { Loading } from "../Loading/Loading";
+import ReactMarkdown from "react-markdown";
 
 type Props = {
   article: Article;
@@ -51,7 +52,9 @@ export const ArticleCard = (props: Props): ReactElement => {
         <p className="article__grey-text">
           Jitka M - {format(new Date(props.article.createdAt), "MM/dd/yy")}
         </p>
-        <p className="article__perex">{props.article.perex}</p>
+        <ReactMarkdown className="article__perex">
+          {props.article.perex}
+        </ReactMarkdown>
         <Link
           to={`/recent-articles/${props.article.articleId}`}
           className="link"

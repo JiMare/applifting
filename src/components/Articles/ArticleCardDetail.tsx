@@ -6,6 +6,7 @@ import { ArticleDetail } from "../../model/ArticleDetail";
 import { format } from "date-fns";
 import "./Articles.css";
 import { Loading } from "../Loading/Loading";
+import ReactMarkdown from "react-markdown";
 
 export const ArticleCardDetail = (): ReactElement => {
   const [articleData, setArticleData] = useState<ArticleDetail | null>(null);
@@ -71,11 +72,9 @@ export const ArticleCardDetail = (): ReactElement => {
                 className="article-detail__image"
               />
             )}
-            {articleData.content.split("\n").map((text, index) => (
-              <p key={index} className="article-detail__content">
-                {text}
-              </p>
-            ))}
+            <ReactMarkdown className="article-detail__content">
+              {articleData.content}
+            </ReactMarkdown>
           </Box>
         )}
       </Container>
