@@ -29,11 +29,17 @@ export const Articles = (): ReactElement => {
       }
     };
     fetchArticles();
-    
   }, []);
 
+  const articlesSortedByDate = (articles: Article[]): Article[] => {
+    const sortedArticles = articles.sort((a, b) => {
+      return a.createdAt > b.createdAt ? -1 : a.createdAt < b.createdAt ? 1 : 0;
+    });
+    return sortedArticles;
+  };
+
   let articlesTitle = "Recent articles";
-  if(loadedArticles.length === 0 && !processing){
+  if (loadedArticles.length === 0 && !processing) {
     articlesTitle = "No articles available";
   }
 
@@ -47,7 +53,7 @@ export const Articles = (): ReactElement => {
           {articlesTitle}
         </Typography>
         <Box sx={{ marginTop: "3rem" }}>
-          {loadedArticles.map((article) => (
+          {articlesSortedByDate(loadedArticles).map((article) => (
             <ArticleCard key={article.articleId} article={article} />
           ))}
         </Box>
