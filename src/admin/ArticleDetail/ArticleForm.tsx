@@ -28,7 +28,7 @@ type FormValues = {
 export const ArticleForm = (): ReactElement => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isPublished, setIsPublished] = useState<boolean>(false);
-  const [selectedFile, setSelectedFile] = useState<File | null | Blob>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>("");
 
   const { token, isUser } = userStore.useStore(
@@ -61,7 +61,7 @@ export const ArticleForm = (): ReactElement => {
         }
       );
       const imageBlob = await imageResponse.blob();
-      setSelectedFile(imageBlob);
+      setSelectedFile(new File([imageBlob], "picture"));
     } catch (error) {
       console.error(error);
     }
@@ -157,16 +157,17 @@ export const ArticleForm = (): ReactElement => {
     requestHeaders.set("Authorization", token);
 
     const formData = new FormData();
-    if (selectedFile) {
+    if (selectedFile && selectedFile.name !== "picture") {
       formData.append("image", selectedFile);
     }
     try {
+   
       const response = await fetch(
         "https://fullstack.exercise.applifting.cz/images",
         {
           method: "POST",
           mode: "cors",
-          body: formData,
+          body: formData && formData,
           headers: {
             Authorization: token,
             "X-API-KEY": process.env.REACT_APP_API_KEY!,
@@ -179,7 +180,7 @@ export const ArticleForm = (): ReactElement => {
           articleId: articleToUpdate?.articleId,
           title: data.title,
           perex: data.content.slice(0, 500) + "...",
-          imageId: responseData[0].imageId,
+          imageId: responseData.length ? responseData[0].imageId : articleToUpdate?.imageId,
           content: data.content,
         };
         const articleResponse = await fetch(
@@ -250,13 +251,14 @@ export const ArticleForm = (): ReactElement => {
 
         <input
           {...register("image", {
-            required: "Image is required",
+           required: !selectedFile && "Image is required",
           })}
           accept="*.jpeg, *.png, *.jpg"
           id="contained-button-file"
           type="file"
           className="input"
           onChange={onSelectFile}
+          value={""}
         />
         <FormLabel htmlFor="contained-button-file" className="label">
           Featured Image
