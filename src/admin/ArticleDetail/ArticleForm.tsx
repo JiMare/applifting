@@ -125,7 +125,7 @@ export const ArticleForm = (): ReactElement => {
         const newArticle = {
           articleId: uuidv4(),
           title: data.title,
-          perex: data.content.slice(0, 500) + "...",
+          perex: data.content.slice(0, 300) + "...",
           imageId: responseData[0].imageId,
           content: data.content,
         };

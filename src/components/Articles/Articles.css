@@ -16,7 +16,7 @@
 
 .article__image {
   width: 17rem;
-  height: 15.25rem;
+  height: auto;
 }
 
 .article__perex {
@@ -36,7 +36,7 @@
 .article__image-box {
   position: relative;
   width: 17rem;
-  height: 15.25rem;
+  height: auto;
 }
 
 .article-detail__content {
