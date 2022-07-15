@@ -53,6 +53,7 @@ export const Navbar = (): ReactElement => {
     <AppBar
       position="static"
       sx={{ backgroundColor: "#F8F9FA", color: "#212529" }}
+      id="navbar"
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -64,7 +65,7 @@ export const Navbar = (): ReactElement => {
               aria-label="menu"
               sx={{ mr: 2 }}
             >
-              <img src="logo.svg" alt="cat-logo" />
+              <img src="logo.svg" alt="cat-logo" id="logo" />
             </IconButton>
           </Link>
           <Box sx={{ flexGrow: 1, display: "flex", gap: "2.5rem" }}>
