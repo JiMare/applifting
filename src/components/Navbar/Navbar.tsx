@@ -43,7 +43,7 @@ export const Navbar = (): ReactElement => {
   ) : (
     <Link to="/login" className="link link--blue">
       <Button>
-        <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
+        <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }} id="login">
           Log in <ArrowForwardIcon fontSize="small" />
         </Box>
       </Button>
