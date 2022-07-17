@@ -113,7 +113,7 @@ export const Login = (): ReactElement => {
             </Typography>
           )}
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button variant="contained" type="submit" disabled={processing}>
+            <Button variant="contained" type="submit" disabled={processing} id="login-button">
               Log In
             </Button>
           </Box>
