@@ -54,7 +54,7 @@ export const ListOfArticles = (): ReactElement => {
           alignItems: "center",
         }}
       >
-        <Typography variant="h1" sx={{ fontSize: "2.5rem", fontWeight: 500 }}>
+        <Typography variant="h1" sx={{ fontSize: "2.5rem", fontWeight: 500 }} id="my-articles">
           My articles
         </Typography>
         <Link to="/admin-article-form" className="link">
