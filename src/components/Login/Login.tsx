@@ -93,6 +93,7 @@ export const Login = (): ReactElement => {
             })}
             error={Boolean(errors.username)}
             helperText={errors.username?.message}
+            id="email"
           />
           <TextField
             sx={{ marginBottom: "1.5rem" }}
@@ -104,6 +105,7 @@ export const Login = (): ReactElement => {
             })}
             error={Boolean(errors.password)}
             helperText={errors.password?.message}
+            id="password"
           />
           {errorMessage && (
             <Typography variant="h6" sx={{ color: "#d32f2f" }}>
