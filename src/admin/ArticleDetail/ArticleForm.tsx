@@ -99,6 +99,20 @@ export const ArticleForm = (): ReactElement => {
     }
   };
 
+  const onDeleteImage = async (id: string): Promise<void> => {
+    try {
+      await fetch("https://fullstack.exercise.applifting.cz/images/" + id, {
+        method: "DELETE",
+        headers: {
+          Authorization: token,
+          "X-API-KEY": process.env.REACT_APP_API_KEY!,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const createNewArticle = async (data: FormValues): Promise<void> => {
     setErrorMessage("");
     const requestHeaders = getRequestHeaders();
@@ -159,8 +173,9 @@ export const ArticleForm = (): ReactElement => {
     requestHeaders.set("Authorization", token);
 
     const formData = new FormData();
-    if (selectedFile && selectedFile.name !== "picture") {
+    if (articleToUpdate && selectedFile && selectedFile.name !== "picture") {
       formData.append("image", selectedFile);
+      await onDeleteImage(articleToUpdate.imageId);
     }
     try {
       const response = await fetch(
